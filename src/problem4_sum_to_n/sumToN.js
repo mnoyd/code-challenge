@@ -7,7 +7,7 @@ const MAX_SAFE_N = Math.floor((Math.sqrt(8 * MAX_SAFE_SUM + 1) - 1) / 2);
 function sumConst(n) {
   n = Math.floor(n);
   if (n <= 0) return 0;
-  return (n % 2 === 0) ? (n / 2) * (n + 1) : ((n + 1) / 2) * n;
+  return n % 2 === 0 ? (n / 2) * (n + 1) : ((n + 1) / 2) * n;
 }
 
 /** O(n) — simple loop */
@@ -25,7 +25,9 @@ function sumQuadratic(n) {
   if (n <= 0) return 0;
   let s = 0;
   for (let i = 1; i <= n; i++) {
-    s += i;  // Add i to sum (not increment s by 1, i times)
+    for (let j = 1; j <= i; j++) {
+      s++;
+    }
   }
   return s;
 }
@@ -40,26 +42,26 @@ function benchmark(fn, n) {
 
 // Demo
 function runDemo() {
-  console.log('=== Sum-to-N Algorithm Demo ===\n');
-  
+  console.log("=== Sum-to-N Algorithm Demo ===\n");
+
   const testValues = [10, 1000, 100000];
-  
-  testValues.forEach(n => {
+
+  testValues.forEach((n) => {
     console.log(`Testing n = ${n.toLocaleString()}`);
     console.log(`Expected: ${(n * (n + 1)) / 2}`);
-    
+
     const r1 = benchmark(sumConst, n);
     const r2 = benchmark(sumLinear, n);
     const r3 = benchmark(sumQuadratic, n);
-    
+
     console.log(`O(1) Gauss:     ${r1.result} (${r1.ms.toFixed(3)}ms)`);
     console.log(`O(n) Linear:    ${r2.result} (${r2.ms.toFixed(3)}ms)`);
     console.log(`O(n²) Quad:     ${r3.result} (${r3.ms.toFixed(3)}ms)`);
-    
+
     const allCorrect = r1.result === r2.result && r2.result === r3.result;
-    console.log(`All correct: ${allCorrect ? '✅' : '❌'}\n`);
+    console.log(`All correct: ${allCorrect ? "✅" : "❌"}\n`);
   });
-  
+
   console.log(`Max safe n: ${MAX_SAFE_N.toLocaleString()}`);
 }
 
